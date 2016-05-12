@@ -12,6 +12,6 @@ import retrofit2.http.Query;
  * Created by ivan on 11/05/2016.
  */
 public interface MostrarEventosById {
-    @GET("php/MostrarEventosById.php")
+    @GET("php/mostrarEventosById.php")
     Call<List<Evento>> getEventosById(@Query("idUsuario") int idUsuario);
 }

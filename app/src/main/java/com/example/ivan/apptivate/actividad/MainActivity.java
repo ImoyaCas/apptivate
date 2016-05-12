@@ -11,7 +11,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,24 +18,20 @@ import android.widget.TextView;
 
 import com.example.ivan.apptivate.Fragments.FragmentCrearEvento;
 import com.example.ivan.apptivate.Fragments.MostrarEventos;
+import com.example.ivan.apptivate.Fragments.MostrarTusEventos;
 import com.example.ivan.apptivate.R;
-import com.example.ivan.apptivate.controlador.ServicioMostrarEventos;
-import com.example.ivan.apptivate.modelo.Evento;
-import com.example.ivan.apptivate.modelo.RestClient;
 import com.example.ivan.apptivate.modelo.Usuario;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, FragmentCrearEvento.OnFragmentInteractionListener {
 
-public static List<Evento> eventos ;
+
+
+
+    int id;
+    Fragment fragment = null;
+    boolean FragmentTransaction = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,28 +66,11 @@ public static List<Evento> eventos ;
         nombrevista.setText(Usuario.nombreVista);
         emailvista.setText(Usuario.emailVista);
 
-       RestClient restClient = new RestClient();
-        Retrofit retrofit = restClient.getRetrofit();
-
-        ServicioMostrarEventos servicio = retrofit.create(ServicioMostrarEventos.class);
-        Call<List<Evento>> respuesta = servicio.getEventos("ee");
-        eventos = new ArrayList<>();
-        respuesta.enqueue(new Callback<List<Evento>>() {
-            @Override
-            public void onResponse(Call<List<Evento>> call, Response<List<Evento>> response) {
-                eventos = response.body();
-                Log.i("EEEE","ERROR12Nombre : "+eventos.get(0).getNombre());
-                Log.i("EEEE","ERROR12 : "+response.body().toString());
-            }
-
-            @Override
-            public void onFailure(Call<List<Evento>> call, Throwable t) {
-                Log.i("EEEE","ERROR12 : "+t.getMessage());
-            }
-        });
-
-
     }
+
+
+
+
 
     @Override
     public void onBackPressed() {
@@ -130,19 +108,19 @@ public static List<Evento> eventos ;
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
+        id = item.getItemId();
 
-        Fragment fragment = null;
-        boolean FragmentTransaction = false;
+
 
         if (id == R.id.crea_evento) {
             fragment = new FragmentCrearEvento();
             FragmentTransaction = true;
         } else if (id == R.id.ver_tus_eventos) {
-            fragment = new MostrarEventos();
+            fragment = new MostrarTusEventos();
             FragmentTransaction = true;
         } else if (id == R.id.ver_todos_eventos) {
-
+            fragment = new MostrarEventos();
+            FragmentTransaction = true;
         } else if (id == R.id.galeria) {
 
         } else if (id == R.id.perfil) {
