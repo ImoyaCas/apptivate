@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">Apptivate</string>
+    <string name="title_activity_login">Login</string>
+    <string name="title_activity_SingUp">Registrate</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_user">Nombre Usuario</string>
+    <string name="prompt_password">Contraseña</string>
+    <string name="action_sign_in">Entrar</string>
+    <string name="action_sign_up">Registrate</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">El nombre de usuario es incorrecto</string>
+    <string name="error_invalid_password">Esta contraseña es demasiado cortat</string>
+    <string name="error_incorrect_password">Esta contraseña es incorrecta</string>
+    <string name="error_field_required">Este campo es obligatorio</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="title_activity_main">Apptivate</string>
+
+    <string name="navigation_drawer_open">Abre el menu deslizante</string>
+    <string name="navigation_drawer_close">Cerrar el menu deslizante</string>
+
+    <string name="action_settings">Configuracion</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
