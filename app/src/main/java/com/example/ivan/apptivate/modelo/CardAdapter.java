@@ -1,16 +1,28 @@
 package com.example.ivan.apptivate.modelo;
 
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.ivan.apptivate.Fragments.MostrarEventos;
 import com.example.ivan.apptivate.R;
+import com.example.ivan.apptivate.controlador.SumarPlaza;
 
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 /**
  * Created by ivan on 05/05/2016.
@@ -18,37 +30,25 @@ import java.util.List;
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.EventoViewHolder> {
 
     private List<Evento> items;
-    //private Context context;
-
-    /*public MyAdapter(Context c) {
-        this.context = c;
-        mDataset = new ArrayList();
-    }
-
-    public void add(Item i) {
-        mDataset.add(i);
-        notifyItemInserted(mDataset.indexOf(i));
-    }
-    public void remove(Item item) {
-        int position = mDataset.indexOf(item);
-
-        if(position != -1) {
-            mDataset.remove(position);
-            notifyItemRemoved(position);
-        }
-    }*/
+    int plz;
+    String estado;
+    private int idEvento;
 
     public static class EventoViewHolder extends RecyclerView.ViewHolder {
         // Campos respectivos de un item
         public ImageView imagen;
-        public TextView nombre;
+        public TextView nombre, lugar, plazas;
+        public Button boton;
         CardView cv;
 
         public EventoViewHolder(View v) {
             super(v);
             cv = (CardView) itemView.findViewById(R.id.mycard);
             imagen = (ImageView) v.findViewById(R.id.img);
-            nombre = (TextView) v.findViewById(R.id.texto1);
+            nombre = (TextView) v.findViewById(R.id.nombreEven);
+            lugar = (TextView) v.findViewById(R.id.lugarEven);
+            plazas = (TextView)v.findViewById(R.id.plazasEvent);
+            boton = (Button)v.findViewById(R.id.action_button);
         }
     }
 
@@ -72,15 +72,104 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.EventoViewHold
     }
 
     @Override
-    public void onBindViewHolder(EventoViewHolder viewHolder, int i) {
+    public void onBindViewHolder(final EventoViewHolder viewHolder, final int i) {
         viewHolder.imagen.setImageResource(R.drawable.img1);
         viewHolder.nombre.setText(items.get(i).getNombre());
+        viewHolder.lugar.setText(items.get(i).getLugar());
+        viewHolder.plazas.setText(items.get(i).getPlazasOcupadas()+"/"+items.get(i).getPlazas());
+        viewHolder.boton.setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View v) {
+                idEvento = items.get(i).getId();
+                plazasLibres(viewHolder,i);
+
+            }
+        });
     }
 
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
+    }
+
+
+    public void notificaciones(final EventoViewHolder viewHolder, final int i) {
+
+        AlertDialog.Builder dialogo;
+        dialogo = new AlertDialog.Builder(viewHolder.boton.getContext());
+        dialogo.setTitle("Inscribiendote");
+        dialogo.setMessage("Confirma tu inscripcion");
+
+        dialogo.setPositiveButton("Yes", new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                acepta(viewHolder, i);
+            }
+
+        });
+
+        dialogo.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                cancela(viewHolder);
+            }
+        });
+        dialogo.show();
+    }
+
+    public void plazasLibres(EventoViewHolder viewHolder, int i){
+
+        MostrarEventos.allEvents();
+
+        Log.i("plazasocupadas","ERROR12 : "+items.get(i).getPlazasOcupadas());
+        Log.i("plazas","ERROR12 : "+items.get(i).getPlazas());
+
+        if(items.get(i).getPlazasOcupadas()< items.get(i).getPlazas()){
+            notificaciones(viewHolder,i);
+            SumarPlazaEvento();
+        }else{
+            Toast toast = Toast.makeText(viewHolder.boton.getContext(),"No hay plazas", Toast.LENGTH_LONG);
+            toast.show();
+        }
+    }
+
+    public void SumarPlazaEvento(){
+
+        RestClient restClient = new RestClient();
+        Retrofit retrofit = restClient.getRetrofit();
+
+
+        SumarPlaza servicio = retrofit.create(SumarPlaza.class);
+        Call<String> respuesta = servicio.SumarPlaza(idEvento);
+        respuesta.enqueue(new Callback<String>() {
+
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                estado = response.body();
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.i("insertarplaza","ERROR12 : "+t.getMessage());
+            }
+        });
+
+    }
+
+    public void acepta(EventoViewHolder viewHolder,int i) {
+
+        MostrarEventos.allEvents();
+
+        Toast toast = Toast.makeText(viewHolder.boton.getContext(),"Registrado en actividad", Toast.LENGTH_LONG);
+        toast.show();
+    }
+
+    public void cancela(EventoViewHolder viewHolder) {
+
+        Toast toast = Toast.makeText(viewHolder.boton.getContext(),"No te has registrado", Toast.LENGTH_LONG);
+        toast.show();
+
     }
 }
 
