@@ -32,8 +32,8 @@ public class MostrarEventos extends Fragment {
 
     View view;
     public static List<Evento> eventos ;
-    RecyclerView card;
-    CardAdapter myadaptador;
+    static RecyclerView card;
+    static CardAdapter myadaptador;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -53,7 +53,7 @@ public class MostrarEventos extends Fragment {
         //return super.onCreateView(inflater, container, savedInstanceState);
     }
 
-    public void allEvents(){
+    public static void allEvents(){
 
         RestClient restClient = new RestClient();
         Retrofit retrofit = restClient.getRetrofit();

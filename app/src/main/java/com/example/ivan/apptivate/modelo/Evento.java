@@ -12,6 +12,7 @@ public class Evento {
     double precio;
     int plazas;
     int idUsuario;
+    int plazasOcupadas;
 
     public Evento() {}
 
@@ -25,7 +26,13 @@ public class Evento {
         this.idUsuario = idUsuario;
     }
 
+    public int getPlazasOcupadas() {
+        return plazasOcupadas;
+    }
 
+    public void setPlazasOcupadas(int plazasOcupadas) {
+        this.plazasOcupadas = plazasOcupadas;
+    }
 
     public int getId() {
         return id;
