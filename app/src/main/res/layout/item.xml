@@ -54,7 +54,6 @@
             android:layout_below="@+id/lugarEven"
             style="?android:attr/borderlessButtonStyle"
             android:textColor="?attr/colorPrimary"
-            android:text="Inscribete"
             android:nestedScrollingEnabled="false"
             android:clickable="false" />
 

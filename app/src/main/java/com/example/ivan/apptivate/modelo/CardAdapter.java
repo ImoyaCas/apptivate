@@ -73,6 +73,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.EventoViewHold
 
     @Override
     public void onBindViewHolder(final EventoViewHolder viewHolder, final int i) {
+        viewHolder.boton.setText("Inscribete");
         viewHolder.imagen.setImageResource(R.drawable.img1);
         viewHolder.nombre.setText(items.get(i).getNombre());
         viewHolder.lugar.setText(items.get(i).getLugar());
@@ -84,12 +85,13 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.EventoViewHold
 
                 idEvento = items.get(i).getId();
 
-                if(viewHolder.boton.getText().equals("borrar")){
-                    RestarPlazaEvento();
-                    viewHolder.boton.setText("Inscribete");//llamar a funcion que borre y cambiar texto, despues añadir rresto de codigo en el else
-                }else{
+                if(viewHolder.boton.getText().equals("Inscribete")){
                     plazasLibres(viewHolder,i);
-                    viewHolder.boton.setText("Borrar");
+                    viewHolder.boton.setText("Borrar");//llamar a funcion que borre y cambiar texto, despues añadir rresto de codigo en el else
+                }else{
+                    RestarPlazaEvento();
+                    viewHolder.boton.setText("Inscribete");
+
                 }
 
 

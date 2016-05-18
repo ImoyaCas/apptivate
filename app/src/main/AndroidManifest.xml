@@ -34,6 +34,15 @@
             android:name=".actividad.MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".actividad.Perfil"
+            android:label="Perfil"
+            android:parentActivityName=".actividad.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.ivan.apptivate.actividad.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
