@@ -138,7 +138,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         Usuario.nombreVista = usuario.getUsername();
                         Usuario.emailVista = usuario.getEmail();
                         Usuario.idVista = usuario.getId();
-                        System.out.println("valor de la static nombre: " + Usuario.nombreVista + " Valor del static email: " + Usuario.emailVista+ " Valor del static id: " + Usuario.idVista);
+                       System.out.println("valor de la static nombre: " + Usuario.nombreVista + " Valor del static email: " + Usuario.emailVista+ " Valor del static id: " + Usuario.idVista);
                     }
 
                     @Override
@@ -147,7 +147,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                        // toast.show();
                     }
                 });
-                attemptLogin();
+               // attemptLogin();
             }
         });
 

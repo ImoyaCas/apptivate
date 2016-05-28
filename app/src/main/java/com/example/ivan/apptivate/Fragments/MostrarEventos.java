@@ -1,21 +1,27 @@
 package com.example.ivan.apptivate.Fragments;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.example.ivan.apptivate.R;
+import com.example.ivan.apptivate.controlador.ManejarPlazas;
 import com.example.ivan.apptivate.controlador.ServicioMostrarEventos;
 import com.example.ivan.apptivate.modelo.CardAdapter;
 import com.example.ivan.apptivate.modelo.Evento;
 import com.example.ivan.apptivate.modelo.RestClient;
+import com.example.ivan.apptivate.modelo.Usuario;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +37,7 @@ import retrofit2.Retrofit;
 public class MostrarEventos extends Fragment {
 
     View view;
+    public static List<Usuario> usuarios;
     public static List<Evento> eventos ;
     static RecyclerView card;
     static CardAdapter myadaptador;
@@ -88,7 +95,50 @@ public class MostrarEventos extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+    }
+
+    public static void getUsuariosInscritos(int id) {
+
+        RestClient restClient = new RestClient();
+        Retrofit retrofit = restClient.getRetrofit();
 
 
+        ManejarPlazas servicio = retrofit.create(ManejarPlazas.class);
+        Call<List<Usuario>> respuesta = servicio.listarInscritos(id);
+        usuarios = new ArrayList<>();
+        respuesta.enqueue(new Callback<List<Usuario>>() {
+
+
+            @Override
+            public void onResponse(Call<List<Usuario>> call, Response<List<Usuario>> response) {
+                usuarios = response.body();
+            }
+
+            @Override
+            public void onFailure(Call<List<Usuario>> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public static void mostrarUsuarios() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(card.getContext());
+        builder.setTitle("Usuarios inscritos");
+        ArrayList<String> nombres = new ArrayList<>();
+
+        ListView modeList = new ListView(card.getContext());
+        for(Usuario usuario:usuarios) {
+            nombres.add(usuario.getUsername());
+        }
+        ArrayAdapter<String> modeAdapter = new ArrayAdapter<>(card.getContext(), android.R.layout.simple_list_item_1, android.R.id.text1, nombres);
+        modeList.setAdapter(modeAdapter);
+
+        builder.setView(modeList);
+        final Dialog dialog = builder.create();
+
+        dialog.show();
+
+        Log.i("allEvents", "ERROR12 : "  );
     }
 }

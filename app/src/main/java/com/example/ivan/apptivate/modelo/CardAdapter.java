@@ -73,7 +73,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.EventoViewHold
 
     @Override
     public void onBindViewHolder(final EventoViewHolder viewHolder, final int i) {
-        viewHolder.boton.setText("Inscribete");
         viewHolder.imagen.setImageResource(R.drawable.img1);
         viewHolder.nombre.setText(items.get(i).getNombre());
         viewHolder.lugar.setText(items.get(i).getLugar());
@@ -84,18 +83,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.EventoViewHold
             public void onClick(View v) {
 
                 idEvento = items.get(i).getId();
-
-                if(viewHolder.boton.getText().equals("Inscribete")){
-                    plazasLibres(viewHolder,i);
-                    viewHolder.boton.setText("Borrar");//llamar a funcion que borre y cambiar texto, despues añadir rresto de codigo en el else
-                }else{
-                    RestarPlazaEvento();
-                    viewHolder.boton.setText("Inscribete");
-
-                }
-
-
-
+                plazasLibres(viewHolder,i);
+                   //llamar a funcion que borre y cambiar texto, despues añadir rresto de codigo en el else
             }
         });
     }
@@ -111,7 +100,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.EventoViewHold
         AlertDialog.Builder dialogo;
         dialogo = new AlertDialog.Builder(viewHolder.boton.getContext());
         dialogo.setTitle("Inscribiendote");
-        dialogo.setMessage("Confirma tu inscripcion");
+        dialogo.setMessage("Confirma tu inscripción");
 
         dialogo.setPositiveButton("Si", new DialogInterface.OnClickListener(){
             @Override
@@ -130,6 +119,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.EventoViewHold
         dialogo.show();
     }
 
+
     public void plazasLibres(EventoViewHolder viewHolder, int i){
 
         MostrarEventos.allEvents();
@@ -139,8 +129,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.EventoViewHold
 
         if(items.get(i).getPlazasOcupadas()< items.get(i).getPlazas()){
             notificaciones(viewHolder,i);
-            SumarPlazaEvento();
-            //insertar valores en tabla mixta
+
         }else{
             Toast toast = Toast.makeText(viewHolder.boton.getContext(),"No hay plazas", Toast.LENGTH_SHORT);
             toast.show();
@@ -165,6 +154,29 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.EventoViewHold
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 Log.i("insertarplaza","ERROR12 : "+t.getMessage());
+            }
+        });
+
+    }
+
+    public void almacenarInscrito(){
+
+        RestClient restClient = new RestClient();
+        Retrofit retrofit = restClient.getRetrofit();
+
+
+        ManejarPlazas servicio = retrofit.create(ManejarPlazas.class);
+        Call<String> respuesta = servicio.inscribir(Usuario.idVista, idEvento);
+        respuesta.enqueue(new Callback<String>() {
+
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.i("restarplaza","ERROR12 : "+t.getMessage());
             }
         });
 
@@ -196,16 +208,19 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.EventoViewHold
     public void acepta(EventoViewHolder viewHolder,int i) {
 
         MostrarEventos.allEvents();
-
         Toast toast = Toast.makeText(viewHolder.boton.getContext(),"Registrado en actividad", Toast.LENGTH_SHORT);
         toast.show();
+        almacenarInscrito();
+        SumarPlazaEvento();
     }
 
     public void cancela(EventoViewHolder viewHolder) {
 
+        MostrarEventos.allEvents();
         Toast toast = Toast.makeText(viewHolder.boton.getContext(),"No te has registrado", Toast.LENGTH_SHORT);
         toast.show();
-
+        RestarPlazaEvento();
     }
+
 }
 

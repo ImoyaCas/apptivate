@@ -1,5 +1,9 @@
 package com.example.ivan.apptivate.controlador;
 
+import com.example.ivan.apptivate.modelo.Usuario;
+
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -15,5 +19,10 @@ public interface ManejarPlazas {
     @GET("php/restarPlaza.php")
     Call<String> RestarPlaza(@Query("id") int id);
 
+    @GET("php/inscribir.php")
+    Call<String> inscribir(@Query("idUsuario") int idUsuario, @Query("idEvento") int idEvento);
+
+    @GET("php/listarInscritos.php")
+    Call<List<Usuario>> listarInscritos(@Query("id_actividad") int id_actividad);
 
 }
