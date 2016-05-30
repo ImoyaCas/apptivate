@@ -98,27 +98,54 @@ public class MostrarEventos extends Fragment {
     }
 
     public static void getUsuariosInscritos(int id) {
-
+        Log.i("Principio:",""+id);
         RestClient restClient = new RestClient();
+        Retrofit retrofit = restClient.getRetrofit();
+
+        Log.i("segundo:",""+id);
+        ManejarPlazas servicio = retrofit.create(ManejarPlazas.class);
+        Call<List<Usuario>> respuesta = servicio.listarInscritos(id);
+        usuarios = new ArrayList<>();
+        Log.i("Antes del onresponse:",""+id);
+        respuesta.enqueue(new Callback<List<Usuario>>() {
+            @Override
+            public void onResponse(Call<List<Usuario>> call, Response<List<Usuario>> response) {
+                Log.i("getusuariosinscritos",""+response.body());
+                usuarios = response.body();
+                Log.i("getusuariosinscritos",""+usuarios.size());
+                mostrarUsuarios();
+            }
+
+            @Override
+            public void onFailure(Call<List<Usuario>> call, Throwable t) {
+                Log.i("getusuariosinscritos","failure->"+t.getMessage());
+                Log.i("getusuariosinscritos","failure->"+call.toString());
+            }
+        });
+ /*RestClient restClient = new RestClient();
         Retrofit retrofit = restClient.getRetrofit();
 
 
         ManejarPlazas servicio = retrofit.create(ManejarPlazas.class);
         Call<List<Usuario>> respuesta = servicio.listarInscritos(id);
         usuarios = new ArrayList<>();
+        Log.i("Antes del onresponse:",""+id);
         respuesta.enqueue(new Callback<List<Usuario>>() {
-
 
             @Override
             public void onResponse(Call<List<Usuario>> call, Response<List<Usuario>> response) {
+                Log.i("getusuariosinscritos",""+response.body());
                 usuarios = response.body();
+                mostrarUsuarios();
+
             }
 
             @Override
             public void onFailure(Call<List<Usuario>> call, Throwable t) {
-
+                Log.i("getusuariosinscritos","failure->"+t.getMessage());
+                Log.i("getusuariosinscritos","failure->"+call.toString());
             }
-        });
+        });*/
     }
 
     public static void mostrarUsuarios() {
@@ -128,9 +155,11 @@ public class MostrarEventos extends Fragment {
         ArrayList<String> nombres = new ArrayList<>();
 
         ListView modeList = new ListView(card.getContext());
+
         for(Usuario usuario:usuarios) {
             nombres.add(usuario.getUsername());
         }
+
         ArrayAdapter<String> modeAdapter = new ArrayAdapter<>(card.getContext(), android.R.layout.simple_list_item_1, android.R.id.text1, nombres);
         modeList.setAdapter(modeAdapter);
 
@@ -139,6 +168,6 @@ public class MostrarEventos extends Fragment {
 
         dialog.show();
 
-        Log.i("allEvents", "ERROR12 : "  );
+        Log.i("mostrarUsuarios", "ERROR12 : "  );
     }
 }

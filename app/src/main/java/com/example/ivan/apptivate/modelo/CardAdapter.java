@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,6 +40,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.EventoViewHold
         public ImageView imagen;
         public TextView nombre, lugar, plazas;
         public Button boton;
+        public ImageButton btn;
         CardView cv;
 
         public EventoViewHolder(View v) {
@@ -49,6 +51,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.EventoViewHold
             lugar = (TextView) v.findViewById(R.id.lugarEven);
             plazas = (TextView)v.findViewById(R.id.plazasEvent);
             boton = (Button)v.findViewById(R.id.action_button);
+            btn = (ImageButton) v.findViewById(R.id.share_button);
         }
     }
 
@@ -85,6 +88,14 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.EventoViewHold
                 idEvento = items.get(i).getId();
                 plazasLibres(viewHolder,i);
                    //llamar a funcion que borre y cambiar texto, despues añadir rresto de codigo en el else
+            }
+        });
+        viewHolder.btn.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                MostrarEventos.getUsuariosInscritos(items.get(i).getId());
+                Log.i("valor de id evento:",""+items.get(i).getId());
             }
         });
     }

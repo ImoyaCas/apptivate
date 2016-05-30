@@ -22,7 +22,7 @@ public interface ManejarPlazas {
     @GET("php/inscribir.php")
     Call<String> inscribir(@Query("idUsuario") int idUsuario, @Query("idEvento") int idEvento);
 
-    @GET("php/listarInscritos.php")
-    Call<List<Usuario>> listarInscritos(@Query("id_actividad") int id_actividad);
+    @GET("php/getUsuariosInscritos.php")
+    Call<List<Usuario>> listarInscritos(@Query("idEvento") int idEvento);
 
 }
