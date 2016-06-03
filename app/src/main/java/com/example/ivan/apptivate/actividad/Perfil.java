@@ -1,6 +1,7 @@
 package com.example.ivan.apptivate.actividad;
 
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -8,12 +9,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -27,18 +28,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ivan.apptivate.R;
-import com.example.ivan.apptivate.controlador.EnviarImagen;
-import com.example.ivan.apptivate.modelo.RestClient;
+
+import org.apache.http.HttpVersion;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.ContentBody;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.CoreProtocolPNames;
 
 import java.io.File;
-
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
+import java.io.IOException;
 
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -46,12 +47,16 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 /**
  * Created by ivan on 18/05/2016.
  */
+
 public class Perfil extends AppCompatActivity {
 
     ImageView avatar;
+    static ImageView avatarStatic;
     TextView nombre, email;
     CoordinatorLayout vista;
     FloatingActionButton fab;
+    File newFile;
+    Intent intent;
 
     private static String APP_DIRECTORY = "ImagenesApptivate/";/******** <-------------- poner aqui la direccion del directorio principal************************/
     private static String MEDIA_DIRECTORY = APP_DIRECTORY + "avatar";/********* <---------------------- POMER AWQUI LA DIREECCION DEL DIRECTORIO EN EL CUAL SE GUARDAN LAS IMAGENES**********/
@@ -71,7 +76,8 @@ public class Perfil extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        avatar = (ImageView)findViewById(R.id.imgPerfil);
+        //avatar = (ImageView)findViewById(R.id.imgPerfil);
+        avatarStatic = (ImageView)findViewById(R.id.imgPerfil);
         nombre = (TextView)findViewById(R.id.nombrePerfil);
         email = (TextView)findViewById(R.id.emailPerfil);
         vista = (CoordinatorLayout)findViewById(R.id.vistaPerfil);
@@ -127,7 +133,7 @@ public class Perfil extends AppCompatActivity {
                 if(option[which] == "Tomar foto"){
                     openCamera();
                 }else if(option[which] == "Elegir de galeria"){
-                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     intent.setType("image/*");
                     startActivityForResult(intent.createChooser(intent,"Seleciona una imagen"),SELECT_PICTURE);
                 }else{
@@ -149,11 +155,11 @@ public class Perfil extends AppCompatActivity {
 
         if(isDirectoryCreated){
             Long timeStamp = System.currentTimeMillis() / 1000;
-            String imageName = timeStamp.toString() + ".png";
+            String imageName = timeStamp.toString() + ".jpg";
 
             mPath = Environment.getExternalStorageDirectory() + File.separator + MEDIA_DIRECTORY + File.separator +imageName;
 
-            File newFile = new File(mPath);
+            newFile = new File(mPath);
 
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(newFile));
@@ -187,26 +193,28 @@ public class Perfil extends AppCompatActivity {
 
                         @Override
                         public void onScanCompleted(String path, Uri uri) {
-                            Log.i("ExternalStorage", "Scanned " + path + ":");
+                            Log.i("ExternalStorage", "-> Scanned = " + path );
                             Log.i("ExternalStorage", "-> uri = " + uri);
                         }
                     });
 
                     Bitmap bitmap = BitmapFactory.decodeFile(mPath);
-                    uploadFile(mPath,"hola");
-                    avatar.setImageBitmap(bitmap);
+                    avatarStatic.setImageBitmap(bitmap);
+                    serverUpdate();
+                    Log.i("UTILIZO serverUpdate","");
                     break;
 
                 case SELECT_PICTURE:
                     Uri path = data.getData();
                     avatar.setImageURI(path);
+                   // serverUpdate();
                     break;
             }
         }
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if(requestCode == MY_PERMISSIONS){
@@ -243,51 +251,81 @@ public class Perfil extends AppCompatActivity {
         dialogo.show();
     }
 
-    private void uploadFile(String ruta, String desc) {
-/**********Meter Uri fileUri como parametro en el metodo uploapFile en introducirla en new File************/
-        // create upload service client
-        RestClient restClient = new RestClient();
-        Retrofit retrofit = restClient.getRetrofit();
+    private void uploadFoto(String ruta) {
 
-        EnviarImagen servicio = retrofit.create(EnviarImagen.class);
+        HttpClient httpclient = new DefaultHttpClient();
+        httpclient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
+        HttpPost httppost = new HttpPost("http://apptivate.esy.es/php/subirImg.php");
+        MultipartEntity mpEntity = new MultipartEntity();
+        ContentBody foto = new FileBody(newFile, "image/jpeg");
+        mpEntity.addPart("fotoUp", foto);
+        httppost.setEntity(mpEntity);
+        try {
+            httpclient.execute(httppost);
+            httpclient.getConnectionManager().shutdown();
+            Log.i("uploadFoto: ","paso por aqui"+newFile.toString()+ "foto -> "+foto.toString()+"httpost -> "+httppost.getMethod());
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
-        // use the FileUtils to get the actual file by uri
-        /****Meter direccion de imagen*****/
-        File file = new File(ruta);
-
-        // create RequestBody instance from file
-        final RequestBody requestFile =
-                RequestBody.create(MediaType.parse("multipart/form-data"), file);
-
-        // MultipartBody.Part is used to send also the actual file name
-        MultipartBody.Part body =
-                MultipartBody.Part.createFormData("picture", file.getName(), requestFile);
-
-        // add another part within the multipart request
-        String descriptionString = desc;
-        RequestBody description =
-                RequestBody.create(
-                        MediaType.parse("multipart/form-data"), descriptionString);
-
-        Log.d("ANTES DEL RESPONSE ","YAAAAAAA"+requestFile.toString());
-
-        // finally, execute the request
-        Call<String> call = servicio.upload(requestFile, description);
-        call.enqueue(new Callback<String>() {
-
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                Log.d("onresponsePerfil","YAAAAAAA");
-                Log.d("REQUESTFILE ","YAAAAAAA"+requestFile.toString());
-                Log.d("respueta ","YAAAAAAA"+response.body().toString());
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                Log.d("onresponsePerfil","ERROR"+t.getMessage());
-            }
-        });
     }
 
+    private boolean onInsert(){
+        return true;
+    }
 
+    private void serverUpdate(){
+        if (newFile.exists())new ServerUpdate().execute();
+    }
+
+    class ServerUpdate extends AsyncTask<String,String,String> {
+
+        ProgressDialog pDialog;
+        @Override
+        protected String doInBackground(String... arg0) {
+            uploadFoto(mPath);
+            if(onInsert())
+                runOnUiThread(new Runnable(){
+                    @Override
+                    public void run() {
+                        // TODO Auto-generated method stub
+
+                       /*String user = Usuario.nombreVista; //esto da null
+                        Intent modify_intent = new Intent(getApplicationContext(), Perfil.class);
+                        modify_intent.putExtra("foto", "avatar.jpg");
+                        modify_intent.putExtra("user",user);
+                       // Perfil.this.finish();
+                        Log.i("doInBackground: ","paso por aqui"+user+" "+modify_intent.toString());
+                        Log.i("doInBackground: ","mPath: "+mPath);
+                        startActivity(modify_intent);*/
+                    }
+                });
+            else
+                runOnUiThread(new Runnable(){
+                    @Override
+                    public void run() {
+                        // TODO Auto-generated method stub
+                        Toast.makeText(Perfil.this, "Sin éxito al subir la imagen",
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
+            return null;
+        }
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Log.i("onPreExecute: ","paso por aqui");
+            pDialog = new ProgressDialog(Perfil.this);
+            pDialog.setMessage("Actualizando Servidor, espere..." );
+            pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            pDialog.show();
+        }
+        protected void onPostExecute(String result) {
+            Log.i("onPostExecute: ","paso por aqui"+result);//esto da null
+            super.onPostExecute(result);
+            pDialog.dismiss();
+        }
+
+    }
 }
+
