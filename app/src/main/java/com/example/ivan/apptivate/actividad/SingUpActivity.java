@@ -66,8 +66,8 @@ public class SingUpActivity extends AppCompatActivity {
                         username.setText("");
                         password.setText("");
                         eMail.setText("");
-                        accionPositiva(response);
                         webservice = response.body();
+                        accionPositiva(response);
                         System.out.println("La respuesta es: "+webservice);
                     }
 
@@ -103,14 +103,16 @@ public class SingUpActivity extends AppCompatActivity {
 
         if (webservice == "true"){
             ok = true;
+            System.out.println("El webservice es: "+webservice);
+            System.out.println("El boolean es: "+ok);
         }
         if (ok == true) {
-            Toast toast = Toast.makeText(this, "Credenciales Correctos", Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(this, "Te has registrado correctamente", Toast.LENGTH_LONG);
             toast.show();
             Intent intent = new Intent(SingUpActivity.this, LoginActivity.class);
             startActivity(intent);
         }else{
-            Toast toast = Toast.makeText(this, "Credenciales inCorrectos", Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(this, "No te has registrado, intentalo de nuevo", Toast.LENGTH_LONG);
             toast.show();
         }
     }

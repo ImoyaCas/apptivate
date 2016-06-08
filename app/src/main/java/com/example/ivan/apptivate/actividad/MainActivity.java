@@ -123,10 +123,8 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.ver_todos_eventos) {
             fragment = new MostrarEventos();
             FragmentTransaction = true;
-        } else if (id == R.id.galeria) {
-
-        } else if (id == R.id.perfil) {
-
+        } else if (id == R.id.finish) {
+            System.exit(0);
         } /*else if (id == R.id.nav_send) {
 
         }*/

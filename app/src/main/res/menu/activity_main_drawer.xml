@@ -4,29 +4,24 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/crea_evento"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_crear_evento"
             android:title="Crea un Evento" />
         <item
             android:id="@+id/ver_tus_eventos"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_ver_eventos"
             android:title="Mira tus eventos" />
         <item
             android:id="@+id/ver_todos_eventos"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_ver_eventos"
             android:title="Ver todos los eventos" />
-
     </group>
 
     <item android:title="Communicate">
         <menu>
             <item
-                android:id="@+id/galeria"
-                android:icon="@drawable/ic_menu_manage"
-                android:title="galeria" />
-            <item
-                android:id="@+id/perfil"
-                android:icon="@drawable/ic_menu_send"
-                android:title="perfil" />
+                android:id="@+id/finish"
+                android:icon="@drawable/ic_salir"
+                android:title="Cerrar Sesión" />
         </menu>
     </item>
 

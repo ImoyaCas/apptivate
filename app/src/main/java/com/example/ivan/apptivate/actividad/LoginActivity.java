@@ -51,7 +51,7 @@ import static android.Manifest.permission.READ_CONTACTS;
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
-   // private EditText username, password;
+    // private EditText username, password;
     //private String user, pass;
     //Boolean estado = false;
 
@@ -117,8 +117,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 String user = mNombreView.getText().toString();
                 String pass = mPasswordView.getText().toString();
 
-               // final Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-               // startActivity(intent);
+                // final Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                // startActivity(intent);
 
                 RestClient restClient = new RestClient();
                 Retrofit retrofit = restClient.getRetrofit();
@@ -130,24 +130,24 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     @Override
                     public void onResponse(Call<Usuario> call, Response<Usuario> response) {
                         iniciarActivity();
-                       // cambiarVentana(response);
+                        // cambiarVentana(response);
                         usuario = response.body();
-                       System.out.println("valor de la respuesta: " + response.body().getUsername() + " Valor del obj usuario: " + usuario.getUsername() + " Valor del text view: " + mNombreView.getText().toString());
+                        System.out.println("valor de la respuesta: " + response.body().getUsername() + " Valor del obj usuario: " + usuario.getUsername() + " Valor del text view: " + mNombreView.getText().toString());
                         System.out.println("valor de la respuesta: " + response.body().getPassword() + " Valor del obj usuario: " + usuario.getPassword()+ " Valor del text view: " + mPasswordView.getText().toString());
                         //String nombre = usuario.getUsername();
                         Usuario.nombreVista = usuario.getUsername();
                         Usuario.emailVista = usuario.getEmail();
                         Usuario.idVista = usuario.getId();
-                       System.out.println("valor de la static nombre: " + Usuario.nombreVista + " Valor del static email: " + Usuario.emailVista+ " Valor del static id: " + Usuario.idVista);
+                        System.out.println("valor de la static nombre: " + Usuario.nombreVista + " Valor del static email: " + Usuario.emailVista+ " Valor del static id: " + Usuario.idVista);
                     }
 
                     @Override
                     public void onFailure(Call<Usuario> call, Throwable t) {
                         //Toast toast = Toast.makeText(this, "Credenciales Correctos", Toast.LENGTH_LONG);
-                       // toast.show();
+                        // toast.show();
                     }
                 });
-               // attemptLogin();
+                // attemptLogin();
             }
         });
 
@@ -162,7 +162,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-       // mLoginFormView = findViewById(R.id.login_form);
+        // mLoginFormView = findViewById(R.id.login_form);
         //mProgressView = findViewById(R.id.login_progress);
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -170,7 +170,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
    /* public void cambiarVentana(Response<Usuario> response) {
-
         //usuario.setUsername(response.body().getUsername());
         //String nombre = usuario.getUsername();
                 //Usuario.edad = response.body().getEdad();
@@ -487,4 +486,3 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 }
-

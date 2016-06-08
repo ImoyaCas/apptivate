@@ -28,6 +28,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ivan.apptivate.R;
+import com.example.ivan.apptivate.controlador.EnviarImagen;
+import com.example.ivan.apptivate.modelo.RestClient;
+import com.example.ivan.apptivate.modelo.Usuario;
 
 import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
@@ -40,6 +43,13 @@ import org.apache.http.params.CoreProtocolPNames;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -51,15 +61,16 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 public class Perfil extends AppCompatActivity {
 
     ImageView avatar;
-    static ImageView avatarStatic;
     TextView nombre, email;
     CoordinatorLayout vista;
     FloatingActionButton fab;
     File newFile;
     Intent intent;
+    String nombreImg;
 
     private static String APP_DIRECTORY = "ImagenesApptivate/";/******** <-------------- poner aqui la direccion del directorio principal************************/
     private static String MEDIA_DIRECTORY = APP_DIRECTORY + "avatar";/********* <---------------------- POMER AWQUI LA DIREECCION DEL DIRECTORIO EN EL CUAL SE GUARDAN LAS IMAGENES**********/
+
 
     private final int MY_PERMISSIONS = 100;
     private final int PHOTO_CODE = 200;
@@ -77,11 +88,19 @@ public class Perfil extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         //avatar = (ImageView)findViewById(R.id.imgPerfil);
-        avatarStatic = (ImageView)findViewById(R.id.imgPerfil);
+        avatar = (ImageView)findViewById(R.id.imgPerfil);
+       /* if(avatar != null) {
+            new LoadImage(avatar).execute(dir.getURLimagen());  //poner aqui el resultado de la consulta que seria la direccion de la imagen
+        }*/
         nombre = (TextView)findViewById(R.id.nombrePerfil);
         email = (TextView)findViewById(R.id.emailPerfil);
         vista = (CoordinatorLayout)findViewById(R.id.vistaPerfil);
         fab = (FloatingActionButton) findViewById(R.id.fab);
+
+        nombre.setText(Usuario.nombreVista);
+        email.setText(Usuario.emailVista);
+
+
 
         if(mayRequestStoragePermission())
             fab.setEnabled(true);
@@ -158,7 +177,8 @@ public class Perfil extends AppCompatActivity {
             String imageName = timeStamp.toString() + ".jpg";
 
             mPath = Environment.getExternalStorageDirectory() + File.separator + MEDIA_DIRECTORY + File.separator +imageName;
-
+            nombreImg = imageName;
+            Log.i("nombreimagen",""+nombreImg);
             newFile = new File(mPath);
 
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -199,7 +219,7 @@ public class Perfil extends AppCompatActivity {
                     });
 
                     Bitmap bitmap = BitmapFactory.decodeFile(mPath);
-                    avatarStatic.setImageBitmap(bitmap);
+                    avatar.setImageBitmap(bitmap);
                     serverUpdate();
                     Log.i("UTILIZO serverUpdate","");
                     break;
@@ -263,6 +283,7 @@ public class Perfil extends AppCompatActivity {
         try {
             httpclient.execute(httppost);
             httpclient.getConnectionManager().shutdown();
+            insertarRuta();
             Log.i("uploadFoto: ","paso por aqui"+newFile.toString()+ "foto -> "+foto.toString()+"httpost -> "+httppost.getMethod());
         } catch (IOException e) {
             // TODO Auto-generated catch block
@@ -326,6 +347,54 @@ public class Perfil extends AppCompatActivity {
             pDialog.dismiss();
         }
 
+    }
+
+    class LoadImage extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public LoadImage(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+
+                mIcon11 = BitmapFactory.decodeStream((InputStream) new URL(urldisplay).getContent());
+
+            } catch (Exception e) {
+                //Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
+        }
+    }
+
+    public void insertarRuta(){
+
+        RestClient restClient = new RestClient();
+        Retrofit retrofit = restClient.getRetrofit();
+
+        EnviarImagen servicio = retrofit.create(EnviarImagen.class);
+        Call<String> respuesta = servicio.setUrlImg(Usuario.idVista, nombreImg);
+        respuesta.enqueue(new Callback<String>() {
+
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.i("insertarplaza","ERROR12 : "+t.getMessage());
+            }
+        });
     }
 }
 

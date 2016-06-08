@@ -9,6 +9,7 @@ public class Usuario {
     String username;
     String password;
     String email;
+    String urlImg;
     public static String nombreVista, emailVista;
     public static int  idVista;
 
@@ -28,6 +29,14 @@ public class Usuario {
     public void setId(int id) {
         this.id = id;
         idVista = id;
+    }
+
+    public String getUrlImg() {
+        return urlImg;
+    }
+
+    public void setUrlImg(String urlImg) {
+        this.urlImg = urlImg;
     }
 
     public String getUsername() {
