@@ -3,15 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:layout_marginBottom="@dimen/md_keylines"
-    android:layout_marginLeft="@dimen/md_keylines"
-    android:layout_marginRight="@dimen/md_keylines"
+    android:layout_marginBottom="@dimen/md_keylines_bottom"
+    android:layout_marginLeft="@dimen/md_keylines_left"
+    android:layout_marginRight="@dimen/md_keylines_right"
     android:foreground="?attr/selectableItemBackground"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content" >
 
         <ImageView
             android:id="@+id/img"
@@ -66,7 +66,7 @@
             android:layout_alignParentRight="true"
             style="?android:attr/borderlessButtonStyle"
             android:src="@drawable/ver_usuarios"
-            android:backgroundTint="#880e4f" />
+            android:backgroundTint="#00A79D" />
 
         <TextView
             android:id="@+id/plazasEvent"

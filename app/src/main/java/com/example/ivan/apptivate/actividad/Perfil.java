@@ -70,6 +70,8 @@ public class Perfil extends AppCompatActivity {
 
     private static String APP_DIRECTORY = "ImagenesApptivate/";/******** <-------------- poner aqui la direccion del directorio principal************************/
     private static String MEDIA_DIRECTORY = APP_DIRECTORY + "avatar";/********* <---------------------- POMER AWQUI LA DIREECCION DEL DIRECTORIO EN EL CUAL SE GUARDAN LAS IMAGENES**********/
+    public static final String SUBURL = "http://apptivate.esy.es/";
+
 
 
     private final int MY_PERMISSIONS = 100;
@@ -89,9 +91,9 @@ public class Perfil extends AppCompatActivity {
 
         //avatar = (ImageView)findViewById(R.id.imgPerfil);
         avatar = (ImageView)findViewById(R.id.imgPerfil);
-       /* if(avatar != null) {
-            new LoadImage(avatar).execute(dir.getURLimagen());  //poner aqui el resultado de la consulta que seria la direccion de la imagen
-        }*/
+        if(avatar != null) {
+            new LoadImage(avatar).execute(Usuario.urlImgVista);  //poner aqui el resultado de la consulta que seria la direccion de la imagen
+        }
         nombre = (TextView)findViewById(R.id.nombrePerfil);
         email = (TextView)findViewById(R.id.emailPerfil);
         vista = (CoordinatorLayout)findViewById(R.id.vistaPerfil);
@@ -163,6 +165,7 @@ public class Perfil extends AppCompatActivity {
         dialogo.show();
     }
 
+
     private void openCamera() {
 
         File file = new File(Environment.getExternalStorageDirectory(), MEDIA_DIRECTORY);
@@ -220,6 +223,7 @@ public class Perfil extends AppCompatActivity {
 
                     Bitmap bitmap = BitmapFactory.decodeFile(mPath);
                     avatar.setImageBitmap(bitmap);
+
                     serverUpdate();
                     Log.i("UTILIZO serverUpdate","");
                     break;
@@ -361,11 +365,10 @@ public class Perfil extends AppCompatActivity {
             String urldisplay = urls[0];
             Bitmap mIcon11 = null;
             try {
-
                 mIcon11 = BitmapFactory.decodeStream((InputStream) new URL(urldisplay).getContent());
-
+                Log.i("LoadImage: ",""+mIcon11);
             } catch (Exception e) {
-                //Log.e("Error", e.getMessage());
+                //Log.i("Error", e.getMessage());
                 e.printStackTrace();
             }
             return mIcon11;

@@ -54,10 +54,7 @@ public class MostrarEventos extends Fragment {
         layout.setOrientation(LinearLayoutManager.VERTICAL);
         card.setLayoutManager(layout);
 
-
-
         return view;
-        //return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     public static void allEvents(){
@@ -97,6 +94,10 @@ public class MostrarEventos extends Fragment {
         super.onActivityCreated(savedInstanceState);
     }
 
+    /**
+     * Metodo que muestra los usuarios inscritos en una lista desplegable.
+     * @param id posicion del usuario en la lista
+     */
     public static void getUsuariosInscritos(int id) {
         Log.i("Principio:",""+id);
         RestClient restClient = new RestClient();
@@ -122,30 +123,6 @@ public class MostrarEventos extends Fragment {
                 Log.i("getusuariosinscritos","failure->"+call.toString());
             }
         });
- /*RestClient restClient = new RestClient();
-        Retrofit retrofit = restClient.getRetrofit();
-
-
-        ManejarPlazas servicio = retrofit.create(ManejarPlazas.class);
-        Call<List<Usuario>> respuesta = servicio.listarInscritos(id);
-        usuarios = new ArrayList<>();
-        Log.i("Antes del onresponse:",""+id);
-        respuesta.enqueue(new Callback<List<Usuario>>() {
-
-            @Override
-            public void onResponse(Call<List<Usuario>> call, Response<List<Usuario>> response) {
-                Log.i("getusuariosinscritos",""+response.body());
-                usuarios = response.body();
-                mostrarUsuarios();
-
-            }
-
-            @Override
-            public void onFailure(Call<List<Usuario>> call, Throwable t) {
-                Log.i("getusuariosinscritos","failure->"+t.getMessage());
-                Log.i("getusuariosinscritos","failure->"+call.toString());
-            }
-        });*/
     }
 
     public static void mostrarUsuarios() {

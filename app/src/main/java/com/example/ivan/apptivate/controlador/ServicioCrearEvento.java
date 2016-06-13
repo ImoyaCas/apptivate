@@ -10,6 +10,6 @@ import retrofit2.http.Query;
 public interface ServicioCrearEvento {
 
     @GET("php/crearEvento.php")
-    Call<String> setUser(@Query("nombre") String nombre, @Query("lugar") String lugar, @Query("descripcion") String descripcion, @Query("precio") Double precio, @Query("plazas") int plazas, @Query("idUsuario") int idUsuario);
+    Call<String> setUser(@Query("nombre") String nombre, @Query("lugar") String lugar, @Query("descripcion") String descripcion, @Query("precio") Double precio, @Query("plazas") int plazas, @Query("idUsuario") int idUsuario, @Query("fecha") String fecha , @Query("hora") String hora);
 
 }

@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -14,11 +15,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.ivan.apptivate.Fragments.DatePickerFragment;
 import com.example.ivan.apptivate.Fragments.FragmentCrearEvento;
 import com.example.ivan.apptivate.Fragments.MostrarEventos;
 import com.example.ivan.apptivate.Fragments.MostrarTusEventos;
+import com.example.ivan.apptivate.Fragments.TimePickerFragment;
 import com.example.ivan.apptivate.R;
 import com.example.ivan.apptivate.modelo.Usuario;
 
@@ -146,5 +150,17 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    public void showTimePickerDialog(View v) {
+        EditText time=(EditText) v.findViewById(R.id.hora);
+        DialogFragment newFragment = new TimePickerFragment(time);
+        newFragment.show(getSupportFragmentManager(), "timePicker");
+
+    }
+    public void showDatePickerDialog(View v) {
+        EditText time=(EditText) v.findViewById(R.id.fecha);
+        DatePickerFragment newFragment = new DatePickerFragment(time);
+        newFragment.show(getFragmentManager(), "datePicker");
     }
 }

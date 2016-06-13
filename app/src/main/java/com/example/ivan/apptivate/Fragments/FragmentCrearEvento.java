@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +47,8 @@ public class FragmentCrearEvento extends Fragment {
         final EditText descripcion;
         final EditText precio;
         final EditText plazas;
+        final EditText fecha;
+        final EditText hora;
 
         if(view != null) {
 
@@ -54,6 +57,8 @@ public class FragmentCrearEvento extends Fragment {
             descripcion = (EditText) view.findViewById(R.id.descripcionEvento);
             precio = (EditText) view.findViewById(R.id.precioEvento);
             plazas = (EditText) view.findViewById(R.id.plazasEvento);
+            fecha = (EditText) view.findViewById(R.id.fecha);
+            hora = (EditText) view.findViewById(R.id.hora);
 
             Button crear = (Button) view.findViewById(R.id.crear);
             crear.setOnClickListener(new View.OnClickListener() {
@@ -66,16 +71,19 @@ public class FragmentCrearEvento extends Fragment {
                     String descripcion1 = descripcion.getText().toString();
                     String precio1 = precio.getText().toString();
                     Integer plazas1 = Integer.parseInt(plazas.getText().toString());
+                    String fecha1 = fecha.getText().toString();
+                    String hora1 = hora.getText().toString();
 
                     int idUsuario = Usuario.idVista;
                     System.out.print("Valor de idUser: " + Usuario.idVista + "Y el otro: " + idUsuario);
                     Double precio2 = Double.valueOf(precio1);
-
+                    Log.i("variable fecha1 =",""+fecha1+fecha1);
+                    Log.i("variable hora1 =",""+hora1+hora1);
                     RestClient restClient = new RestClient();
                     Retrofit retrofit = restClient.getRetrofit();
 
                     ServicioCrearEvento servicio = retrofit.create(ServicioCrearEvento.class);
-                    final Call<String> respuesta = servicio.setUser(nombre1, lugar1, descripcion1, precio2, plazas1, idUsuario);
+                    final Call<String> respuesta = servicio.setUser(nombre1, lugar1, descripcion1, precio2, plazas1, idUsuario, fecha1, hora1);
                     respuesta.enqueue(new Callback<String>() {
 
                         @Override
@@ -86,7 +94,8 @@ public class FragmentCrearEvento extends Fragment {
                             descripcion.setText("");
                             precio.setText("");
                             plazas.setText("");
-
+                            fecha.setText("");
+                            hora.setText("");
                         }
 
                         @Override
@@ -139,4 +148,5 @@ public class FragmentCrearEvento extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
 }

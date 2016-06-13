@@ -138,6 +138,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         Usuario.nombreVista = usuario.getUsername();
                         Usuario.emailVista = usuario.getEmail();
                         Usuario.idVista = usuario.getId();
+                        Usuario.urlImgVista = usuario.getUrlImg();
                         System.out.println("valor de la static nombre: " + Usuario.nombreVista + " Valor del static email: " + Usuario.emailVista+ " Valor del static id: " + Usuario.idVista);
                     }
 

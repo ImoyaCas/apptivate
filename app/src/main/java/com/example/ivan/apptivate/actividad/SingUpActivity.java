@@ -98,6 +98,7 @@ public class SingUpActivity extends AppCompatActivity {
         contenido();
     }
 
+    /** Metodo con el cual verificamos si los datos son correctos o no*/
     public void contenido() {
         boolean ok = false;
 
@@ -107,12 +108,12 @@ public class SingUpActivity extends AppCompatActivity {
             System.out.println("El boolean es: "+ok);
         }
         if (ok == true) {
-            Toast toast = Toast.makeText(this, "Te has registrado correctamente", Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(this, "Te has registrado correctamente", Toast.LENGTH_SHORT);
             toast.show();
             Intent intent = new Intent(SingUpActivity.this, LoginActivity.class);
             startActivity(intent);
         }else{
-            Toast toast = Toast.makeText(this, "No te has registrado, intentalo de nuevo", Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(this, "No te has registrado, intentalo de nuevo", Toast.LENGTH_SHORT);
             toast.show();
         }
     }

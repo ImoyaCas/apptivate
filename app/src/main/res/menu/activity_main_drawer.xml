@@ -16,7 +16,7 @@
             android:title="Ver todos los eventos" />
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="Otras opciones">
         <menu>
             <item
                 android:id="@+id/finish"

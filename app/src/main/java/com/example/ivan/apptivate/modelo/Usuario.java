@@ -1,5 +1,7 @@
 package com.example.ivan.apptivate.modelo;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by ivan on 18/04/2016.
  */
@@ -10,7 +12,8 @@ public class Usuario {
     String password;
     String email;
     String urlImg;
-    public static String nombreVista, emailVista;
+    Bitmap imagen;
+    public static String nombreVista, emailVista, urlImgVista;
     public static int  idVista;
 
     public Usuario() {}
@@ -35,8 +38,17 @@ public class Usuario {
         return urlImg;
     }
 
+    public Bitmap getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(Bitmap imagen) {
+        this.imagen = imagen;
+    }
+
     public void setUrlImg(String urlImg) {
         this.urlImg = urlImg;
+        urlImgVista = urlImg;
     }
 
     public String getUsername() {
