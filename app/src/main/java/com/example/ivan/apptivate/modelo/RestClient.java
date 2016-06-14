@@ -17,6 +17,7 @@ public class RestClient {
     public RestClient() {
         final String BASE_URL = "http://apptivate.esy.es/";
         Gson gson = new GsonBuilder()
+                .setDateFormat("dd/mm/yy")
                 .setLenient()
                 .create();
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();

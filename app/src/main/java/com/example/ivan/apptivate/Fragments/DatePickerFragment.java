@@ -1,9 +1,11 @@
 package com.example.ivan.apptivate.Fragments;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
@@ -13,12 +15,14 @@ import java.util.Calendar;
  * Created by ivan on 12/06/2016.
  */
 
+
+@SuppressLint("ValidFragment")
 public class DatePickerFragment extends DialogFragment
         implements DatePickerDialog.OnDateSetListener {
     EditText fecha;
 
-    public DatePickerFragment(EditText fecha) {
-        this.fecha = fecha;
+    public DatePickerFragment(View v) {
+        fecha = (EditText)v;
 
     }
 
@@ -40,4 +44,11 @@ public class DatePickerFragment extends DialogFragment
         month=month+1;
         fecha.setText(year+"-"+month+ "-"+day);
     }
+
+   /* private void actualizarLaFechaEnTextView() {
+        tvFechaHora.setText(new StringBuilder()
+                .append(dia).append("/")
+                .append(mes + 1).append("/")
+                .append(año));
+    }*/
 }

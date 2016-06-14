@@ -12,18 +12,38 @@ public class Evento {
     double precio;
     int plazas;
     int idUsuario;
+    String fecha;
+    String hora;
     int plazasOcupadas;
 
     public Evento() {}
 
-    public Evento(int id, String nombre, String lugar, String descripcion, double precio, int plazas, int idUsuario) {
+    public Evento(int id, String nombre, String lugar, String descripcion, double precio, int plazas, String fecha, String hora, int idUsuario) {
         this.id = id;
         this.nombre = nombre;
         this.lugar = lugar;
         this.descripcion = descripcion;
         this.precio = precio;
         this.plazas = plazas;
+        this.fecha = fecha;
+        this.hora = hora;
         this.idUsuario = idUsuario;
+    }
+
+    public String getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(String fecha) {
+        this.fecha = fecha;
+    }
+
+    public String getHora() {
+        return hora;
+    }
+
+    public void setHora(String hora) {
+        this.hora = hora;
     }
 
     public int getPlazasOcupadas() {

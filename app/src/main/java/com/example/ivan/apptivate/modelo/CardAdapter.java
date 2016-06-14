@@ -18,6 +18,8 @@ import com.example.ivan.apptivate.Fragments.MostrarEventos;
 import com.example.ivan.apptivate.R;
 import com.example.ivan.apptivate.controlador.ManejarPlazas;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 import retrofit2.Call;
@@ -38,7 +40,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.EventoViewHold
     public static class EventoViewHolder extends RecyclerView.ViewHolder {
         // Campos respectivos de un item
         public ImageView imagen;
-        public TextView nombre, lugar, plazas;
+        public TextView nombre, lugar, plazas, hora, fecha;
         public Button boton;
         public ImageButton btn;
         CardView cv;
@@ -52,6 +54,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.EventoViewHold
             plazas = (TextView)v.findViewById(R.id.plazasEvent);
             boton = (Button)v.findViewById(R.id.action_button);
             btn = (ImageButton) v.findViewById(R.id.share_button);
+            hora = (TextView)v.findViewById(R.id.horaEvent);
+            fecha = (TextView)v.findViewById(R.id.fechaEvent);
         }
     }
 
@@ -79,6 +83,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.EventoViewHold
         viewHolder.imagen.setImageResource(R.drawable.img1);
         viewHolder.nombre.setText(items.get(i).getNombre());
         viewHolder.lugar.setText(items.get(i).getLugar());
+        viewHolder.fecha.setText(cambiarFormatoFecha(items.get(i).getFecha()));
+        viewHolder.hora.setText(items.get(i).getHora());
         viewHolder.plazas.setText(items.get(i).getPlazasOcupadas()+"/"+items.get(i).getPlazas());
         viewHolder.boton.setOnClickListener(new View.OnClickListener() {
 
@@ -104,6 +110,16 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.EventoViewHold
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
     }
+
+    public String cambiarFormatoFecha(String fecha){
+        // Adquirir fecha
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+        fecha = df.format(c.getTime());
+        Log.e("Fecha", fecha);
+        return fecha;
+    }
+
 
 
     public void notificaciones(final EventoViewHolder viewHolder, final int i) {
