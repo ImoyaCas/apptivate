@@ -41,7 +41,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.EventoViewHold
         // Campos respectivos de un item
         public ImageView imagen;
         public TextView nombre, lugar, plazas, hora, fecha;
-        public Button boton;
+        public Button boton, descripcion;
         public ImageButton btn;
         CardView cv;
 
@@ -56,6 +56,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.EventoViewHold
             btn = (ImageButton) v.findViewById(R.id.share_button);
             hora = (TextView)v.findViewById(R.id.horaEvent);
             fecha = (TextView)v.findViewById(R.id.fechaEvent);
+            descripcion = (Button)v.findViewById(R.id.descripcionEvent);
         }
     }
 
@@ -85,23 +86,29 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.EventoViewHold
         viewHolder.lugar.setText(items.get(i).getLugar());
         viewHolder.fecha.setText(cambiarFormatoFecha(items.get(i).getFecha()));
         viewHolder.hora.setText(items.get(i).getHora());
-        viewHolder.plazas.setText(items.get(i).getPlazasOcupadas()+"/"+items.get(i).getPlazas());
+        viewHolder.plazas.setText(items.get(i).getPlazasOcupadas() + "/" + items.get(i).getPlazas());
         viewHolder.boton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
 
                 idEvento = items.get(i).getId();
-                plazasLibres(viewHolder,i);
-                   //llamar a funcion que borre y cambiar texto, despues añadir rresto de codigo en el else
+                plazasLibres(viewHolder, i);
+                //llamar a funcion que borre y cambiar texto, despues añadir rresto de codigo en el else
             }
         });
-        viewHolder.btn.setOnClickListener(new View.OnClickListener(){
+        viewHolder.btn.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 MostrarEventos.getUsuariosInscritos(items.get(i).getId());
-                Log.i("valor de id evento:",""+items.get(i).getId());
+                Log.i("valor de id evento:", "" + items.get(i).getId());
+            }
+        });
+        viewHolder.descripcion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                descripcion(viewHolder, i);
             }
         });
     }
@@ -120,7 +127,10 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.EventoViewHold
         return fecha;
     }
 
-
+    public void descripcion(EventoViewHolder viewHolder,int i){
+        Toast toast = Toast.makeText(viewHolder.descripcion.getContext(),items.get(i).getDescripcion(), Toast.LENGTH_LONG);
+        toast.show();
+    }
 
     public void notificaciones(final EventoViewHolder viewHolder, final int i) {
 

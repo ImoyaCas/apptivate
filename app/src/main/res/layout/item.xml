@@ -50,15 +50,28 @@
 
         <Button
             android:id="@+id/action_button"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/fechaEvent"
             style="?android:attr/borderlessButtonStyle"
             android:nestedScrollingEnabled="false"
             android:clickable="false"
             android:text="Inscribete"
-            android:layout_alignRight="@+id/lugarEven"
-            android:layout_alignEnd="@+id/lugarEven" />
+            android:layout_toLeftOf="@+id/fechaEvent"
+            android:layout_alignLeft="@+id/lugarEven"
+            android:layout_alignStart="@+id/lugarEven" />
+
+        <Button
+            android:id="@+id/descripcionEvent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/fechaEvent"
+            style="?android:attr/borderlessButtonStyle"
+            android:nestedScrollingEnabled="false"
+            android:clickable="false"
+            android:text="Descripcion"
+            android:layout_toRightOf="@+id/fechaEvent"
+            android:layout_toEndOf="@+id/fechaEvent" />
 
         <ImageButton
             android:id="@+id/share_button"
