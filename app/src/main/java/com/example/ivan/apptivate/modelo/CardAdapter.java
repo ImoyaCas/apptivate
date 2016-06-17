@@ -86,7 +86,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.EventoViewHold
         viewHolder.lugar.setText(items.get(i).getLugar());
         viewHolder.fecha.setText(cambiarFormatoFecha(items.get(i).getFecha()));
         viewHolder.hora.setText(items.get(i).getHora());
-        viewHolder.plazas.setText(items.get(i).getPlazasOcupadas() + "/" + items.get(i).getPlazas());
+        viewHolder.plazas.setText("Plz: "+items.get(i).getPlazasOcupadas() + "/" + items.get(i).getPlazas());
         viewHolder.boton.setOnClickListener(new View.OnClickListener() {
 
             @Override

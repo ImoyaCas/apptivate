@@ -43,7 +43,7 @@ import org.apache.http.params.CoreProtocolPNames;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 
 import retrofit2.Call;
@@ -71,8 +71,8 @@ public class Perfil extends AppCompatActivity {
     private static String APP_DIRECTORY = "ImagenesApptivate/";/******** <-------------- poner aqui la direccion del directorio principal************************/
     private static String MEDIA_DIRECTORY = APP_DIRECTORY + "avatar";/********* <---------------------- POMER AWQUI LA DIREECCION DEL DIRECTORIO EN EL CUAL SE GUARDAN LAS IMAGENES**********/
     public static final String SUBURL = "http://apptivate.esy.es/";
-
-
+    public static String finalurl = Usuario.urlImgVista.substring(3);
+    public static final String URL = SUBURL + finalurl;
 
     private final int MY_PERMISSIONS = 100;
     private final int PHOTO_CODE = 200;
@@ -91,9 +91,8 @@ public class Perfil extends AppCompatActivity {
 
         //avatar = (ImageView)findViewById(R.id.imgPerfil);
         avatar = (ImageView)findViewById(R.id.imgPerfil);
-        if(avatar != null) {
-            new LoadImage(avatar).execute(Usuario.urlImgVista);  //poner aqui el resultado de la consulta que seria la direccion de la imagen
-        }
+
+        Log.i("url",""+URL);
         nombre = (TextView)findViewById(R.id.nombrePerfil);
         email = (TextView)findViewById(R.id.emailPerfil);
         vista = (CoordinatorLayout)findViewById(R.id.vistaPerfil);
@@ -102,7 +101,8 @@ public class Perfil extends AppCompatActivity {
         nombre.setText(Usuario.nombreVista);
         email.setText(Usuario.emailVista);
 
-
+        CargaImagenes nuevaTarea = new CargaImagenes();
+        nuevaTarea.execute(URL);
 
         if(mayRequestStoragePermission())
             fab.setEnabled(true);
@@ -315,15 +315,8 @@ public class Perfil extends AppCompatActivity {
                     @Override
                     public void run() {
                         // TODO Auto-generated method stub
-
-                       /*String user = Usuario.nombreVista; //esto da null
-                        Intent modify_intent = new Intent(getApplicationContext(), Perfil.class);
-                        modify_intent.putExtra("foto", "avatar.jpg");
-                        modify_intent.putExtra("user",user);
-                       // Perfil.this.finish();
-                        Log.i("doInBackground: ","paso por aqui"+user+" "+modify_intent.toString());
-                        Log.i("doInBackground: ","mPath: "+mPath);
-                        startActivity(modify_intent);*/
+                        Toast.makeText(Perfil.this, "Imagen subida",
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
             else
@@ -332,7 +325,7 @@ public class Perfil extends AppCompatActivity {
                     public void run() {
                         // TODO Auto-generated method stub
                         Toast.makeText(Perfil.this, "Sin éxito al subir la imagen",
-                                Toast.LENGTH_LONG).show();
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
             return null;
@@ -351,32 +344,6 @@ public class Perfil extends AppCompatActivity {
             pDialog.dismiss();
         }
 
-    }
-
-    class LoadImage extends AsyncTask<String, Void, Bitmap> {
-        ImageView bmImage;
-
-        public LoadImage(ImageView bmImage) {
-            this.bmImage = bmImage;
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                mIcon11 = BitmapFactory.decodeStream((InputStream) new URL(urldisplay).getContent());
-                Log.i("LoadImage: ",""+mIcon11);
-            } catch (Exception e) {
-                //Log.i("Error", e.getMessage());
-                e.printStackTrace();
-            }
-            return mIcon11;
-        }
-        @Override
-        protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
-        }
     }
 
     public void insertarRuta(){
@@ -398,6 +365,58 @@ public class Perfil extends AppCompatActivity {
                 Log.i("insertarplaza","ERROR12 : "+t.getMessage());
             }
         });
+    }
+
+    private class CargaImagenes extends AsyncTask<String, Void, Bitmap>{
+
+        ProgressDialog pDialog;
+
+        @Override
+        protected void onPreExecute() {
+            // TODO Auto-generated method stub
+            super.onPreExecute();
+
+            pDialog = new ProgressDialog(Perfil.this);
+            pDialog.setMessage("Cargando Imagen");
+            pDialog.setCancelable(true);
+            pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            pDialog.show();
+
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            // TODO Auto-generated method stub
+            Log.i("doInBackground" , "Entra en doInBackground");
+            String url = params[0];
+            Bitmap imagen = descargarImagen(url);
+            return imagen;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            // TODO Auto-generated method stub
+            super.onPostExecute(result);
+
+            avatar.setImageBitmap(result);
+            pDialog.dismiss();
+        }
+
+    }
+
+    private Bitmap descargarImagen (String imageHttpAddress){
+        URL imageUrl = null;
+        Bitmap imagen = null;
+        try{
+            imageUrl = new URL(imageHttpAddress);
+            HttpURLConnection conn = (HttpURLConnection) imageUrl.openConnection();
+            conn.connect();
+            imagen = BitmapFactory.decodeStream(conn.getInputStream());
+        }catch(IOException ex){
+            ex.printStackTrace();
+        }
+
+        return imagen;
     }
 }
 

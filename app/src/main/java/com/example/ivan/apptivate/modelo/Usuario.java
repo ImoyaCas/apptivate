@@ -11,7 +11,7 @@ public class Usuario {
     String username;
     String password;
     String email;
-    String urlImg;
+    String avatar;
     Bitmap imagen;
     public static String nombreVista, emailVista, urlImgVista;
     public static int  idVista;
@@ -34,8 +34,13 @@ public class Usuario {
         idVista = id;
     }
 
-    public String getUrlImg() {
-        return urlImg;
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+        urlImgVista = avatar;
     }
 
     public Bitmap getImagen() {
@@ -44,11 +49,6 @@ public class Usuario {
 
     public void setImagen(Bitmap imagen) {
         this.imagen = imagen;
-    }
-
-    public void setUrlImg(String urlImg) {
-        this.urlImg = urlImg;
-        urlImgVista = urlImg;
     }
 
     public String getUsername() {

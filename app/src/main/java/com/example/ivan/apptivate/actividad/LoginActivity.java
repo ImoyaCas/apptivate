@@ -18,6 +18,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -138,7 +139,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         Usuario.nombreVista = usuario.getUsername();
                         Usuario.emailVista = usuario.getEmail();
                         Usuario.idVista = usuario.getId();
-                        Usuario.urlImgVista = usuario.getUrlImg();
+                        Usuario.urlImgVista = usuario.getAvatar();
+                        Log.i("urlavatar",""+Usuario.urlImgVista);
                         System.out.println("valor de la static nombre: " + Usuario.nombreVista + " Valor del static email: " + Usuario.emailVista+ " Valor del static id: " + Usuario.idVista);
                     }
 
