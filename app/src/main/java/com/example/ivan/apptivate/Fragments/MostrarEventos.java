@@ -80,8 +80,7 @@ public class MostrarEventos extends Fragment {
                 Log.i("allEvents","ERROR12 : "+t.getMessage());
             }
         });
-
-
+        allEvents();
     }
 
     @Override

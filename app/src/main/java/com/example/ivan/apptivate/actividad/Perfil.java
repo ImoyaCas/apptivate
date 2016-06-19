@@ -394,6 +394,7 @@ public class Perfil extends AppCompatActivity {
         }
 
         @Override
+
         protected void onPostExecute(Bitmap result) {
             // TODO Auto-generated method stub
             super.onPostExecute(result);

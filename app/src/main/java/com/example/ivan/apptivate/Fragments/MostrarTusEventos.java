@@ -67,7 +67,7 @@ public class MostrarTusEventos extends Fragment {
                 myadaptador = new CardAdapter(eventos);
                 card.setAdapter(myadaptador);
                 Log.i("yourEvents","ERROR12Nombre : "+eventos.get(0).getNombre());
-                Log.i("yourEvents","ERROR12 : "+response.body().toString());
+                Log.i("yourEvents","noERROR12 : "+response.body().toString());
             }
 
             @Override
